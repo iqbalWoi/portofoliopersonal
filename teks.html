@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini App — Halo Mau Lanjut</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: "Inter", sans-serif;
+    background: linear-gradient(135deg, #f8faff, #edf2ff);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 90%;
+    max-width: 350px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    display: none;
+  }
+
+  .active {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.8s forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -45%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    font-weight: 500;
+    color: #333;
+    margin-top: 20px;
+  }
+
+  .btn-group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    min-width: 120px;
+  }
+
+  .btn-primary {
+    background-color: #a3bffa;
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    color: #333;
+  }
+
+  button:hover { transform: scale(1.05); }
+
+  .envelope {
+    font-size: 70px;
+    cursor: pointer;
+    margin-top: 30px;
+    user-select: none;
+  }
+
+  .message {
+    display: none;
+    margin-top: 20px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    line-height: 1.5;
+    color: #444;
+    background: rgba(255,255,255,0.9);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  #music-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+</style>
+</head>
+<body>
+
+<audio id="bgm" loop>
+  <source src="https://github.com/iqbalWoi/foto/raw/refs/heads/main/sound.mp3" type="audio/mp3" />
+</audio>
+<button id="music-btn" onclick="toggleMusic()">🎵</button>
+
+<!-- STEP 1 -->
+<div class="container active" id="step1">
+  <img src="https://github.com/iqbalWoi/foto/raw/refs/heads/main/gambar%201.jpg" alt="foto1">
+  <h2>Halo, mau lanjut? btw sambil nyalain musik di atas kanan ya</h2>
+  <div class="btn-group">
+    <button class="btn-primary" onclick="showStep(2)">iya, lanjut</button>
+    <button class="btn-secondary" onclick="fadeOut(this)">ga makasih</button>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="container" id="step2">
+  <img src="https://github.com/iqbalWoi/foto/raw/refs/heads/main/gambar%202.jpg" alt="foto2">
+  <h2>lanjut lagi></h2>
+  <div class="btn-group">
+    <button class="btn-primary" onclick="showStep(3)">lanjut</button>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="container" id="step3">
+  <h2>klik ini</h2>
+  <div class="envelope" onclick="openLetter()">✉️</div>
+</div>
+
+<!-- STEP 4 -->
+<div class="container" id="step4">
+  <div class="message" id="message">
+    <p>hai baca ini, gapeduli siapapun lu💌<br><br>
+    dibaca sampe habis kalo niat, ga ngerti? ss dan translate,mls? dm buat tanya arti.<br>
+    hey you, feeling tired? lost? a bit drained?
+it’s okay — breathe. You’ve come so far, and that’s already something to be proud of.
+i don’t care who you are or what you’re going through, i just wanna say… you deserve some love and appreciation today.
+
+life hits hard sometimes, i get it. But don’t stop. every storm runs out of rain.
+remember where you started — and if you ever feel 'not enough,' just know that you’re built different, in the best way.
+
+you’ve got something rare, something only you can bring to this world.
+so keep going, alright? you’re doing better than you think 💫🍥</p>
+  </div>
+  <div class="btn-group">
+    <button class="btn-primary" onclick="fadeOut(this)">okee, makasih</button>
+    <button class="btn-secondary" onclick="fadeOut(this)">gaperlu, gw kuat(hoaks jir)</button>
+  </div>
+</div>
+
+<script>
+  let isPlaying = false;
+  const bgm = document.getElementById("bgm");
+  const musicBtn = document.getElementById("music-btn");
+
+  function toggleMusic() {
+    if (isPlaying) {
+      bgm.pause();
+      musicBtn.textContent = "🔇";
+    } else {
+      bgm.play();
+      musicBtn.textContent = "🎵";
+    }
+    isPlaying = !isPlaying;
+  }
+
+  function showStep(step) {
+    const all = document.querySelectorAll(".container");
+    all.forEach(el => {
+      el.classList.remove("active");
+      el.style.display = "none";
+    });
+
+    const next = document.getElementById("step" + step);
+    next.style.display = "block";
+    setTimeout(() => next.classList.add("active"), 50);
+  }
+
+  function fadeOut(element) {
+    const parent = element.closest(".container");
+    parent.style.transition = "opacity 0.8s ease";
+    parent.style.opacity = "0";
+    setTimeout(() => {
+      parent.innerHTML = "<h2 style='color:#444;'>gaya banget..balik baca lagi.</h2>";
+      parent.style.opacity = "1";
+    }, 800);
+  }
+
+  function openLetter() {
+    showStep(4);
+    setTimeout(() => {
+      document.getElementById("message").style.display = "block";
+    }, 600);
+  }
+</script>
+
+</body>
+</html>
